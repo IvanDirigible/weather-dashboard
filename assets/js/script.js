@@ -23,14 +23,14 @@ var submitEl = document.getElementById("submit-btn");
 // var geocodingDURL = `http://api.openweathermap.org/geo/1.0/direct?q=${city},${state},${country}&limit=${limit}&appid=${MyKey}`;
 
 var getHandler = function (city) {
-    city = inputFormEl.value
+    // city = inputFormEl.value
     var queryURL = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${MyKey}&units=imperial`;
     
     fetch(queryURL).then(function(response) {
         if (response.ok) {
             response.json().then(function(data) {
                 console.log(data)
-                var cityFormat = city.replace(/(^\w)|([-\s]\w)/g, match => match.toUpperCase());
+                
                 var tempNow = data.main.temp
                 var windNow = data.wind.speed
                 var humidNow = data.main.humidity
@@ -53,7 +53,7 @@ var getHandler = function (city) {
                 var todayHeader = document.createElement('h2');
                 todayHeader.classList.add("card-header");
                 todayHeader.setAttribute("id", "header-main")
-                todayHeader.textContent = `${cityFormat} (${renderDate})`
+                todayHeader.textContent = `${city} (${renderDate})`
                 todayHeader.appendChild(iconNow)
 
                 var todayTemp = document.createElement('p')
@@ -78,12 +78,7 @@ var getHandler = function (city) {
                 forecastSection.append(forecastHeader, forecastDeck);
                 weatherEl.append(todayCard, forecastSection);
                 // main.append(resultSection);
-                var citySearch = document.createElement('button')
-                citySearch.classList.add("btn")
-                citySearch.setAttribute("id", cityFormat)
-                citySearch.textContent = cityFormat
-
-                searchContainerEl.append(citySearch)
+                
                 // nowHeaderEl.appendChild(iconNow)
                 // nowTempEl.append(` ${tempNow} °F`)
                 // nowWindEl.append(` ${windNow} MPH`)
@@ -140,18 +135,19 @@ var getHandler = function (city) {
         } else {
             return console.error("Sorry, there was an issue with your request.")
         }
-    }).then(function () {
-        console.log("Render searched button to list here.")
+    })
+    // .then(function () {
+    //     console.log("Render searched button to list here.")
 
-        var pastSearches = function (city) {
-            for (var i = 0; i < city.length; i++) {
-                var cityEl = document.createElement('a');
-                cityEl.classList = 'list-item flex-row justify-space-between align-center';
-                cityEl.setAttribute('href', submitHandler(city));
+    //     var pastSearches = function (city) {
+    //         for (var i = 0; i < city.length; i++) {
+    //             var cityEl = document.createElement('a');
+    //             cityEl.classList = 'list-item flex-row justify-space-between align-center';
+    //             cityEl.setAttribute('href', submitHandler(city));
 
-                searchContainerEl.append(cityEl)
-            }
-        }
+    //             searchContainerEl.append(cityEl)
+    //         }
+    //     }
 
         // pastSearches(cityFormat);
 
@@ -164,18 +160,33 @@ var getHandler = function (city) {
         //     fiveWindEl.append(` ${windFive} MPH`)
         //     fiveHumidEl.append(` ${humidFive} %`)
         // }
-    })
+    // })
 };
 
 function submitHandler(event) {
-  event.preventDefault();
+    event.preventDefault();
     
-    console.log(inputFormEl.value);
-    
-    if (!inputFormEl.value) {
+    console.log(`Can you see this? ${inputFormEl.value}`);
+    city = inputFormEl.value.replace(/(^\w)|([-\s]\w)/g, match => match.toUpperCase());
+    // var cityFormat = city.replace(/(^\w)|([-\s]\w)/g, match => match.toUpperCase());
+    if (!city) {
         return alert("Please enter a city into the search box.");
     }
-    getHandler(inputFormEl)
+    var citySearch = document.createElement('button')
+        citySearch.classList.add("btn")
+        citySearch.setAttribute("id", city)
+        citySearch.textContent = city
+
+        searchContainerEl.append(citySearch)
+    getHandler(city)
+    weatherEl.textContent = '';
+}
+
+function pastSearchHandler(target) {
+
+    console.log(`Past: ${target}`)
+    city = target
+    getHandler(city)
     weatherEl.textContent = '';
 }
 
@@ -245,9 +256,4 @@ function submitHandler(event) {
 // }
 
 submitEl.addEventListener("click", submitHandler)
-// Array.from(searchContainerEl.children).forEach(c => c.addEventListener("click", e => console.log(e.target.id)));
-searchContainerEl.addEventListener("click", e => console.log(e.target.id));
-// searchContainerEl.addEventListener("click", function(e) {
-//     var index = Array.prototype.indexOf.call(searchContainerEl.children, e.target);
-//     console.log(index)  
-// }) 
+searchContainerEl.addEventListener("click", e => pastSearchHandler(e.target.id));
