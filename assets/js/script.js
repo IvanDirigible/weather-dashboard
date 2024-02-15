@@ -5,9 +5,10 @@ var nowHeaderEl = document.getElementById("header-main")
 // var nowWindEl = document.getElementById("now-wind")
 // var nowHumidEl = document.getElementById("now-humid")
 // var inputFormEl = $('#search-input');
-var main = document.getElementById('weather-content');
+var main = document.getElementById("weather-content");
 var inputFormEl = document.getElementById('search-input');
 var fiveContainerEl = document.getElementById("five-container");
+var searchContainerEl = document.getElementById("search-container");
 var weatherEl = document.getElementById("results");
 // var date = new Date(unixDate * 1000);
 var icon ="";
@@ -77,7 +78,12 @@ var getHandler = function (city) {
                 forecastSection.append(forecastHeader, forecastDeck);
                 weatherEl.append(todayCard, forecastSection);
                 // main.append(resultSection);
+                var citySearch = document.createElement('button')
+                citySearch.classList.add("btn")
+                citySearch.setAttribute("id", cityFormat)
+                citySearch.textContent = cityFormat
 
+                searchContainerEl.append(citySearch)
                 // nowHeaderEl.appendChild(iconNow)
                 // nowTempEl.append(` ${tempNow} °F`)
                 // nowWindEl.append(` ${windNow} MPH`)
@@ -136,6 +142,19 @@ var getHandler = function (city) {
         }
     }).then(function () {
         console.log("Render searched button to list here.")
+
+        var pastSearches = function (city) {
+            for (var i = 0; i < city.length; i++) {
+                var cityEl = document.createElement('a');
+                cityEl.classList = 'list-item flex-row justify-space-between align-center';
+                cityEl.setAttribute('href', submitHandler(city));
+
+                searchContainerEl.append(cityEl)
+            }
+        }
+
+        // pastSearches(cityFormat);
+
         // for (var i = 0; i < 40; i += 8) {
         //     renderFive(data.results[i]);
             
@@ -226,3 +245,9 @@ function submitHandler(event) {
 // }
 
 submitEl.addEventListener("click", submitHandler)
+// Array.from(searchContainerEl.children).forEach(c => c.addEventListener("click", e => console.log(e.target.id)));
+searchContainerEl.addEventListener("click", e => console.log(e.target.id));
+// searchContainerEl.addEventListener("click", function(e) {
+//     var index = Array.prototype.indexOf.call(searchContainerEl.children, e.target);
+//     console.log(index)  
+// }) 
