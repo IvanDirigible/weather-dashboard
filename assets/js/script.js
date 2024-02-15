@@ -1,12 +1,14 @@
 var MyKey = "8efc6ed3835ac107525a71beb81bc896";
 var searchFormEl = document.getElementById("search-form");
 var nowHeaderEl = document.getElementById("header-main")
-var nowTempEl = document.getElementById("now-temp")
-var nowWindEl = document.getElementById("now-wind")
-var nowHumidEl = document.getElementById("now-humid")
+// var nowTempEl = document.getElementById("now-temp")
+// var nowWindEl = document.getElementById("now-wind")
+// var nowHumidEl = document.getElementById("now-humid")
 // var inputFormEl = $('#search-input');
+var main = document.getElementById('weather-content');
 var inputFormEl = document.getElementById('search-input');
 var fiveContainerEl = document.getElementById("five-container");
+var weatherEl = document.getElementById("results");
 // var date = new Date(unixDate * 1000);
 var icon ="";
 // var iconLink = `http://openweathermap.org/img/w/${icon}.png`;
@@ -15,7 +17,7 @@ var lat = "";
 var lon = "";
 // var state = "";
 // var country = "";
-var limit = 1;
+// var limit = 1;
 var submitEl = document.getElementById("submit-btn");
 // var geocodingDURL = `http://api.openweathermap.org/geo/1.0/direct?q=${city},${state},${country}&limit=${limit}&appid=${MyKey}`;
 
@@ -27,22 +29,59 @@ var getHandler = function (city) {
         if (response.ok) {
             response.json().then(function(data) {
                 console.log(data)
+                var cityFormat = city.replace(/(^\w)|([-\s]\w)/g, match => match.toUpperCase());
                 var tempNow = data.main.temp
                 var windNow = data.wind.speed
                 var humidNow = data.main.humidity
-                var dateNow = (data.dt)
+                var dateNow = data.dt
                 var date = new Date(dateNow *1000)
                 var renderDate = date.toDateString();
                 console.log(`Date: ${date}`)
                 icon = data.weather[0].icon
                 var iconLink = `http://openweathermap.org/img/w/${icon}.png`;
-                nowHeaderEl.textContent = `${city} (${renderDate})`
+                // nowHeaderEl.textContent = `${cityFormat} (${renderDate})`
                 var iconNow = new Image(50, 50);
                 iconNow.src = iconLink
-                nowHeaderEl.appendChild(iconNow)
-                nowTempEl.append(` ${tempNow} °F`)
-                nowWindEl.append(` ${windNow} MPH`)
-                nowHumidEl.append(` ${humidNow} %`)
+
+                // var resultSection = document.createElement('section');
+                // resultSection.classList.add("col-12", "col-md-9")
+
+                var todayCard = document.createElement('div');
+                todayCard.classList.add("card", "bg-secondary");
+
+                var todayHeader = document.createElement('h2');
+                todayHeader.classList.add("card-header");
+                todayHeader.setAttribute("id", "header-main")
+                todayHeader.textContent = `${cityFormat} (${renderDate})`
+                todayHeader.appendChild(iconNow)
+
+                var todayTemp = document.createElement('p')
+                todayTemp.innerHTML = `Temp: ${tempNow} °F`
+
+                var todayWind = document.createElement('p')
+                todayWind.innerHTML = `Wind: ${windNow} MPH`
+                
+                var todayHumid = document.createElement('p')
+                todayHumid.innerHTML = `Humidity: ${humidNow} %`
+
+                var forecastSection = document.createElement('div')
+
+                var forecastHeader =  document.createElement('h3')
+                forecastHeader.textContent = "5-day Forecast:"
+
+                var forecastDeck = document.createElement('div')
+                forecastDeck.classList.add("card-deck", "d-flex", "flex-row");
+                forecastDeck.setAttribute("id", "five-container")
+
+                todayCard.append(todayHeader, todayTemp, todayWind, todayHumid);
+                forecastSection.append(forecastHeader, forecastDeck);
+                weatherEl.append(todayCard, forecastSection);
+                // main.append(resultSection);
+
+                // nowHeaderEl.appendChild(iconNow)
+                // nowTempEl.append(` ${tempNow} °F`)
+                // nowWindEl.append(` ${windNow} MPH`)
+                // nowHumidEl.append(` ${humidNow} %`)
                 lat = data.coord.lat
                 lon = data.coord.lon
                 var query5DayURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${MyKey}&units=imperial`
@@ -61,9 +100,11 @@ var getHandler = function (city) {
                             var iconLink = `http://openweathermap.org/img/w/${icon}.png`;
                             var iconNew = new Image(50, 50);
                             iconNew.src = iconLink
-
+                            
+                            // if ()
                             var fiveCard = document.createElement('div');
                             fiveCard.classList.add('card', 'bg-warning');
+                            // fiveCard.setAttribute("id", `five-day${[i]}`)
 
                             var fiveDate = document.createElement('h5')
                             fiveDate.textContent = renderDate
@@ -82,7 +123,9 @@ var getHandler = function (city) {
                             
                             fiveCard.append(fiveDate, iconNew, fiveTemp, fiveWind, fiveHumid)
                             // fiveContainerEl.appendChild(fiveIcon)
-                            fiveContainerEl.append(fiveCard);
+
+                            // Some error here?
+                            forecastDeck.append(fiveCard);
                         }
                         
                     })
@@ -107,13 +150,14 @@ var getHandler = function (city) {
 
 function submitHandler(event) {
   event.preventDefault();
-  
+    
     console.log(inputFormEl.value);
     
     if (!inputFormEl.value) {
         return alert("Please enter a city into the search box.");
     }
     getHandler(inputFormEl)
+    weatherEl.textContent = '';
 }
 
 // function renderFive(data) {

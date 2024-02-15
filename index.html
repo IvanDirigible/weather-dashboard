@@ -15,7 +15,7 @@
             <h1 class="display-3">Weather Dashboard</h1>
         </header>
         
-        <main class="d-flex flex-row justify-space-between">
+        <main id="weather-content" class="d-flex flex-row justify-space-between">
             <section class="col-12 col-md-3">
 
                 <div class="card bg-danger">
@@ -27,13 +27,13 @@
                 </div>
                 
                 <div class="card">
-                    <div id="cities-container" class="list-group"></div>
+                    <div id="search-container" class="list-group"></div>
                 </div>
             </section>
 
-            <section class="col-12 col-md-9">
-                <div class="card bg-secondary">
-                    <h2 id="header-main" class="card-header">City - Date - Icon </h2>
+            <section id="results" class="col-12 col-md-9">
+                <!-- <div class="card bg-secondary">
+                    <h2 id="header-main" class="card-header">Enter a city into the search bar! </h2>
                     <ul>
                         <li id="now-temp">Temp:</li>
                         <li id="now-wind">Wind:</li>
@@ -43,55 +43,11 @@
                 
                 <div>
                     <h3>5-day Forecast:</h3>
-                    <div id="five-container" class="card-deck d-flex flex-row">
-                        <!-- <div class="card bg-warning">
-                            <ul>
-                                <li>Date:</li>
-                                <li>Emoji:</li>
-                                <li>Temp:</li>
-                                <li>Wind:</li>
-                                <li>Humidity:</li>
-                            </ul>
-                        </div>
-                        <div class="card bg-warning">
-                                <h5>Date:</h5>
-                                <p>Emoji:</p>
-                                <p>Temp:</p>
-                                <p>Wind:</p>
-                                <p>Humidity:</p>
-                        </div>
-                        <div class="card bg-warning">
-                            <ul>
-                                <li>Date:</li>
-                                <li>Emoji:</li>
-                                <li>Temp:</li>
-                                <li>Wind:</li>
-                                <li>Humidity:</li>
-                            </ul>
-                        </div>
-                        <div class="card bg-warning">
-                            <ul>
-                                <li>Date:</li>
-                                <li>Emoji:</li>
-                                <li>Temp:</li>
-                                <li>Wind:</li>
-                                <li>Humidity:</li>
-                            </ul>
-                        </div>
-                        <div class="card bg-warning">
-                            <ul>
-                                <li>Date:</li>
-                                <li>Emoji:</li>
-                                <li>Temp:</li>
-                                <li>Wind:</li>
-                                <li>Humidity:</li>
-                            </ul>
-                        </div> -->
-                    </div>
-                </div>
+                    <div id="five-container" class="card-deck d-flex flex-row"></div>
+                </div> -->
             </section>
         </main>
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> -->
         <script src="./assets/js/script.js"></script>
     </body>
 </html>
