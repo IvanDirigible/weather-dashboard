@@ -1,7 +1,14 @@
 var MyKey = "8efc6ed3835ac107525a71beb81bc896";
-var searchFormEl = document.getElementById('search-form');
+var searchFormEl = document.getElementById("search-form");
+var nowHeaderEl = document.getElementById("header-main")
+var nowTempEl = document.getElementById("now-temp")
+var nowWindEl = document.getElementById("now-wind")
+var nowHumidEl = document.getElementById("now-humid")
 // var inputFormEl = $('#search-input');
 var inputFormEl = document.getElementById('search-input');
+// var date = new Date(unixDate * 1000);
+var icon ="";
+// var iconLink = `http://openweathermap.org/img/w/${icon}.png`;
 var city = "";
 var lat = "";
 var lon = "";
@@ -13,11 +20,27 @@ var submitEl = document.getElementById("submit-btn");
 
 var getHandler = function (city) {
     city = inputFormEl.value
-    var queryURL = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${MyKey}`;
+    var queryURL = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${MyKey}&units=imperial`;
     
     fetch(queryURL).then(function(response) {
         if (response.ok) {
             response.json().then(function(data) {
+                var tempNow = data.main.temp
+                var windNow = data.wind.speed
+                var humidNow = data.main.humidity
+                var dateNow = (data.dt)
+                var date = new Date(dateNow *1000)
+                var renderDate = date.toDateString();
+                icon = data.weather[0].icon
+                var iconNow = document.getElementById("icon-now")
+                var iconLink = `http://openweathermap.org/img/w/${icon}.png`;
+                nowHeaderEl.textContent = `${city} (${renderDate})`
+                var iconNow = new Image(50, 50);
+                iconNow.src = iconLink
+                nowHeaderEl.appendChild(iconNow)
+                nowTempEl.append(` ${tempNow} °F`)
+                nowWindEl.append(` ${windNow} MPH`)
+                nowHumidEl.append(` ${humidNow} %`)
                 lat = data.coord.lat
                 lon = data.coord.lon
                 var query5DayURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${MyKey}`
@@ -31,7 +54,11 @@ var getHandler = function (city) {
         } else {
             return console.error("Sorry, there was an issue with your request.")
         }
-    }).then()
+    }).then(function (data) {
+        for (var i = 0; i < 40; i += 8) {
+            var fiveDayTemp = data.lst[i].main.temp
+        }
+    })
 };
 
 function submitHandler(event) {
@@ -44,6 +71,8 @@ function submitHandler(event) {
     }
     getHandler(inputFormEl)
 }
+
+// function printWeather
 
 // function getHandler(inputFormEl){
 //     city = inputFormEl.value;
