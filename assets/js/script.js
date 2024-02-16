@@ -6,10 +6,6 @@ var inputFormEl = document.getElementById('search-input');
 var fiveContainerEl = document.getElementById("five-container");
 var searchContainerEl = document.getElementById("search-container");
 var weatherEl = document.getElementById("results");
-var icon ="";
-var city = "";
-var lat = "";
-var lon = "";
 var submitEl = document.getElementById("submit-btn");
 
 var getHandler = function (city) {
@@ -26,7 +22,6 @@ var getHandler = function (city) {
                 var dateNow = data.dt
                 var date = new Date(dateNow *1000)
                 var renderDate = date.toDateString();
-                console.log(`Date: ${date}`)
                 icon = data.weather[0].icon
                 var iconLink = `http://openweathermap.org/img/w/${icon}.png`;
                 var iconNow = new Image(50, 50);
@@ -66,7 +61,6 @@ var getHandler = function (city) {
                 lat = data.coord.lat
                 lon = data.coord.lon
                 var query5DayURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${MyKey}&units=imperial`
-                console.log(`Lat:${lat}, Lon:${lon}`)
                 fetch(query5DayURL).then(function(response) {
                     response.json().then(function(renderData) {
                         console.log(renderData);
@@ -114,7 +108,6 @@ var getHandler = function (city) {
 function submitHandler(event) {
     event.preventDefault();
     
-    console.log(`Can you see this? ${inputFormEl.value}`);
     city = inputFormEl.value.replace(/(^\w)|([-\s]\w)/g, match => match.toUpperCase());
     if (!city) {
         return alert("Please enter a city into the search box.");
@@ -131,7 +124,6 @@ function submitHandler(event) {
 
 function pastSearchHandler(target) {
 
-    console.log(`Past: ${target}`)
     city = target
     getHandler(city)
     weatherEl.textContent = '';
@@ -139,3 +131,8 @@ function pastSearchHandler(target) {
 
 submitEl.addEventListener("click", submitHandler);
 searchContainerEl.addEventListener("click", e => pastSearchHandler(e.target.id));
+
+// WILL RETURN TO LOCAL STORAGE WHEN ABLE
+// function init() {
+//     var storedSearches = JSON.parse(localStorage.getItem(searches));
+// }
